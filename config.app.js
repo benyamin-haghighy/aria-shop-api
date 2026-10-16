@@ -1,0 +1,27 @@
+require('dotenv').config()
+module.exports = {
+    server:{
+        port:+process.env.PORT||3000
+    },
+    mongoDb:{
+        mongoUri:process.env.MONGOURI
+    },
+    accessToken:{
+        secret:process.env.ACCESSTOKEN_SECRET_KEY,
+        expire:process.env.ACCESSTOKEN_EXPIRE_IN
+    },
+    refreshToken:{
+        secret:process.env.REFRESHTOKEN_SECRET_KEY,
+        expire:process.env.REFRESHTOKEN_EXPIRE_IN
+    },
+    cookieParser:{
+        secret:process.env.COOKIE_PARSER
+    },
+    redis:{
+        uri:process.env.REDIS_URI
+    },
+    sms:{
+        apiKey:process.env.SMS_API_KEY,
+        patternCode:process.env.SMS_PATTERN_CODE
+    }
+}

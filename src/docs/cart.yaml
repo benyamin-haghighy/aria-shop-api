@@ -1,0 +1,115 @@
+paths:
+  /cart:
+    get:
+      tags:
+        - Cart
+      summary: دریافت سبد خرید کاربر
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: سبد خرید
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                  message:
+                    $ref: '#/components/schemas/Cart'
+        '401':
+          description: توکن نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /cart/add:
+    post:
+      tags:
+        - Cart
+      summary: افزودن محصول به سبد خرید
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - productId
+                - sellerId
+                - quantity
+              properties:
+                productId:
+                  type: string
+                  description: شناسه محصول
+                sellerId:
+                  type: string
+                  description: شناسه فروشنده
+                quantity:
+                  type: integer
+                  minimum: 1
+                  example: 1
+      responses:
+        '201':
+          description: محصول به سبد اضافه شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: موجودی ناکافی یا خطای اعتبارسنجی
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: توکن نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /cart/remove:
+    delete:
+      tags:
+        - Cart
+      summary: حذف یا کاهش تعداد محصول از سبد
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - productId
+                - sellerId
+              properties:
+                productId:
+                  type: string
+                sellerId:
+                  type: string
+      responses:
+        '200':
+          description: محصول از سبد حذف یا تعداد کاهش یافت
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '404':
+          description: سبد یا محصول یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: توکن نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'

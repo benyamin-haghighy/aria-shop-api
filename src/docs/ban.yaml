@@ -1,0 +1,36 @@
+paths:
+  /ban/{phone}:
+    post:
+      tags:
+        - Ban
+      summary: بن کردن کاربر با شماره موبایل (فقط ادمین)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: phone
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^(\+98|0)?9\d{9}$'
+          example: "09123456789"
+          description: شماره موبایل کاربر برای بن
+      responses:
+        '200':
+          description: کاربر با موفقیت بن شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '401':
+          description: دسترسی غیرمجاز (فقط ادمین)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: خطا در بن کردن
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'

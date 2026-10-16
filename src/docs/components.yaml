@@ -1,0 +1,209 @@
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Access token obtained from /auth/verify
+
+  schemas:
+    SuccessResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 200
+        message:
+          oneOf:
+            - type: string
+            - type: object
+
+    ErrorResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: "Error message"
+
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "65f1a2b3c4d5e6f7a8b9c0d1"
+        phone:
+          type: string
+          example: "09123456789"
+        role:
+          type: array
+          items:
+            type: string
+            enum: [ADMIN, USER, SELLER]
+          example: ["USER"]
+        address:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Address:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+          example: "منزل"
+        postalCode:
+          type: string
+          example: "1234567890"
+        address:
+          type: string
+          example: "تهران، خیابان ولیعصر"
+        cityId:
+          type: integer
+          example: 1
+
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+        descryption:
+          type: string
+        subCategory:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        seller:
+          type: array
+          items:
+            type: object
+            properties:
+              seller:
+                type: string
+              price:
+                type: number
+              stock:
+                type: integer
+        filterValue:
+          type: object
+        customFilter:
+          type: object
+
+    Category:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        icon:
+          type: string
+        subCategories:
+          type: array
+          items:
+            type: object
+
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: string
+        user:
+          type: string
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                type: string
+              seller:
+                type: string
+              price:
+                type: number
+              quantity:
+                type: integer
+
+    Order:
+      type: object
+      properties:
+        _id:
+          type: string
+        user:
+          type: string
+        items:
+          type: array
+        totalPrice:
+          type: number
+        status:
+          type: string
+          enum: [pending, paid, shipped, delivered, cancelled]
+
+    Comment:
+      type: object
+      properties:
+        _id:
+          type: string
+        product:
+          type: string
+        user:
+          type: string
+        content:
+          type: string
+        rating:
+          type: integer
+        replies:
+          type: array
+
+    Note:
+      type: object
+      properties:
+        _id:
+          type: string
+        user:
+          type: string
+        product:
+          type: string
+        content:
+          type: string
+
+    Seller:
+      type: object
+      properties:
+        _id:
+          type: string
+        user:
+          type: string
+        storeName:
+          type: string
+        description:
+          type: string
+
+    SellerRequest:
+      type: object
+      properties:
+        _id:
+          type: string
+        user:
+          type: string
+        status:
+          type: string
+          enum: [pending, accepted, rejected]
+        message:
+          type: string

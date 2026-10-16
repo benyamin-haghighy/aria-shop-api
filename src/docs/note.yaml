@@ -1,0 +1,139 @@
+paths:
+  /note:
+    post:
+      tags:
+        - Note
+      summary: ایجاد یا به‌روزرسانی یادداشت
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - product
+                - content
+              properties:
+                product:
+                  type: string
+                  description: شناسه محصول
+                content:
+                  type: string
+                  example: "یادداشت من برای این محصول"
+      responses:
+        '200':
+          description: یادداشت ذخیره شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '401':
+          description: توکن نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      tags:
+        - Note
+      summary: دریافت تمام یادداشت‌های کاربر
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: لیست یادداشت‌ها
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                  message:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Note'
+
+  /note/{id}:
+    get:
+      tags:
+        - Note
+      summary: دریافت یک یادداشت
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: اطلاعات یادداشت
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                  message:
+                    $ref: '#/components/schemas/Note'
+        '404':
+          description: یادداشت یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags:
+        - Note
+      summary: حذف یادداشت
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: یادداشت حذف شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+    put:
+      tags:
+        - Note
+      summary: ویرایش یادداشت
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+      responses:
+        '200':
+          description: یادداشت ویرایش شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'

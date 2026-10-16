@@ -1,0 +1,52 @@
+paths:
+  /location/city:
+    get:
+      tags:
+        - Location
+      summary: دریافت لیست تمام شهرها
+      responses:
+        '200':
+          description: لیست شهرها
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                  message:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        province_id:
+                          type: integer
+
+  /location/provinces:
+    get:
+      tags:
+        - Location
+      summary: دریافت لیست تمام استان‌ها
+      responses:
+        '200':
+          description: لیست استان‌ها
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                  message:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string

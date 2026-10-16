@@ -1,0 +1,247 @@
+paths:
+  /product:
+    get:
+      tags:
+        - Product
+      summary: دریافت لیست محصولات با فیلتر
+      parameters:
+        - name: minPrice
+          in: query
+          schema:
+            type: number
+            default: 0
+        - name: maxPrice
+          in: query
+          schema:
+            type: number
+            default: 100000000000
+        - name: name
+          in: query
+          schema:
+            type: string
+          description: جستجو در نام محصول
+        - name: exist
+          in: query
+          schema:
+            type: boolean
+          description: فقط محصولات موجود
+        - name: subCategory
+          in: query
+          schema:
+            type: string
+          description: شناسه زیردسته
+        - name: seller
+          in: query
+          schema:
+            type: string
+          description: شناسه فروشنده
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: لیست محصولات
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                  message:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+
+    post:
+      tags:
+        - Product
+      summary: ایجاد محصول جدید (فقط ادمین)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - name
+                - slug
+                - subCategory
+                - descryption
+                - filterValue
+              properties:
+                name:
+                  type: string
+                  example: "گوشی موبایل"
+                slug:
+                  type: string
+                  example: "mobile-phone"
+                subCategory:
+                  type: string
+                  example: "65f1a2b3c4d5e6f7a8b9c0d1"
+                descryption:
+                  type: string
+                  example: "توضیحات محصول"
+                seller:
+                  type: string
+                  description: JSON array of sellers [{seller, price, stock}]
+                filterValue:
+                  type: string
+                  description: JSON object
+                customFilter:
+                  type: string
+                  description: JSON object
+                images:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: حداکثر ۱۰ تصویر
+      responses:
+        '201':
+          description: محصول ایجاد شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '401':
+          description: دسترسی غیرمجاز
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /product/{slug}:
+    get:
+      tags:
+        - Product
+      summary: دریافت یک محصول با اسلاگ
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: اطلاعات محصول
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                  message:
+                    $ref: '#/components/schemas/Product'
+        '404':
+          description: محصول یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags:
+        - Product
+      summary: ویرایش محصول (فقط ادمین)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                newslug:
+                  type: string
+                subCategory:
+                  type: string
+                descryption:
+                  type: string
+                newSeller:
+                  type: string
+                  description: JSON array
+                filterValue:
+                  type: string
+                images:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        '200':
+          description: محصول ویرایش شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+    delete:
+      tags:
+        - Product
+      summary: حذف محصول (فقط ادمین)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: محصول حذف شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /product/{slug}/images:
+    delete:
+      tags:
+        - Product
+      summary: حذف تصاویر محصول (فقط ادمین)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                images:
+                  type: array
+                  items:
+                    type: string
+                  description: نام فایل‌های تصاویر برای حذف
+      responses:
+        '200':
+          description: تصاویر حذف شدند
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'

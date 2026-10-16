@@ -1,0 +1,77 @@
+paths:
+  /checkout:
+    post:
+      tags:
+        - Checkout
+      summary: ایجاد درخواست پرداخت (زرین‌پال)
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                addressId:
+                  type: string
+                  description: شناسه آدرس کاربر برای ارسال
+      responses:
+        '200':
+          description: لینک پرداخت ایجاد شد
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                  message:
+                    type: object
+                    properties:
+                      paymentUrl:
+                        type: string
+                        description: لینک درگاه پرداخت
+                      authority:
+                        type: string
+        '400':
+          description: سبد خالی یا خطای دیگر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: توکن نامعتبر
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /checkout/verify:
+    get:
+      tags:
+        - Checkout
+      summary: تایید پرداخت پس از بازگشت از درگاه
+      parameters:
+        - name: Authority
+          in: query
+          schema:
+            type: string
+          description: کد Authority از زرین‌پال
+        - name: Status
+          in: query
+          schema:
+            type: string
+            enum: [OK, NOK]
+      responses:
+        '200':
+          description: پرداخت تایید شد و سفارش ثبت شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: پرداخت ناموفق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'

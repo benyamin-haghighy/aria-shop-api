@@ -1,0 +1,123 @@
+paths:
+  /seller:
+    get:
+      tags:
+        - Seller
+      summary: دریافت اطلاعات فروشگاه کاربر (فروشنده)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: اطلاعات فروشنده
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                  message:
+                    $ref: '#/components/schemas/Seller'
+        '401':
+          description: دسترسی غیرمجاز
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      tags:
+        - Seller
+      summary: ایجاد فروشگاه (فروشنده)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                storeName:
+                  type: string
+                  example: "فروشگاه من"
+                description:
+                  type: string
+                  example: "توضیحات فروشگاه"
+      responses:
+        '201':
+          description: فروشگاه ایجاد شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '401':
+          description: دسترسی غیرمجاز
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /seller/{id}:
+    delete:
+      tags:
+        - Seller
+      summary: حذف فروشگاه
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: فروشگاه حذف شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '404':
+          description: فروشگاه یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    patch:
+      tags:
+        - Seller
+      summary: ویرایش فروشگاه
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                storeName:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '200':
+          description: فروشگاه ویرایش شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '404':
+          description: فروشگاه یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'

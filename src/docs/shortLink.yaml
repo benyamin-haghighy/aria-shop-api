@@ -1,0 +1,27 @@
+paths:
+  /p/{shortIdentifire}:
+    get:
+      tags:
+        - ShortLink
+      summary: ریدایرکت لینک کوتاه محصول
+      description: با استفاده از شناسه کوتاه، به صفحه محصول هدایت می‌شود
+      parameters:
+        - name: shortIdentifire
+          in: path
+          required: true
+          schema:
+            type: string
+          description: شناسه کوتاه لینک
+      responses:
+        '200':
+          description: اطلاعات محصول یا ریدایرکت
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '404':
+          description: لینک یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'

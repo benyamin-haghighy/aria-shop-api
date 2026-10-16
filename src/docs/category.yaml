@@ -1,0 +1,223 @@
+paths:
+  /category:
+    get:
+      tags:
+        - Category
+      summary: دریافت تمام دسته‌بندی‌ها
+      responses:
+        '200':
+          description: لیست دسته‌بندی‌ها
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                  message:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Category'
+
+    post:
+      tags:
+        - Category
+      summary: ایجاد دسته‌بندی جدید (فقط ادمین)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - name
+                - icon
+              properties:
+                name:
+                  type: string
+                  example: "الکترونیک"
+                icon:
+                  type: string
+                  format: binary
+                  description: فایل آیکون (jpeg, jpg, png, webp, gif)
+      responses:
+        '201':
+          description: دسته‌بندی ایجاد شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '401':
+          description: دسترسی غیرمجاز
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /category/{id}:
+    delete:
+      tags:
+        - Category
+      summary: حذف دسته‌بندی (فقط ادمین)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: دسته‌بندی حذف شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '404':
+          description: دسته‌بندی یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags:
+        - Category
+      summary: ویرایش دسته‌بندی (فقط ادمین)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                icon:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: دسته‌بندی ویرایش شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /category/{id}/subcategory:
+    post:
+      tags:
+        - Category
+      summary: ایجاد زیردسته (فقط ادمین)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: شناسه دسته‌بندی والد
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  example: "موبایل"
+      responses:
+        '201':
+          description: زیردسته ایجاد شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /category/subcategory:
+    get:
+      tags:
+        - Category
+      summary: دریافت تمام زیردسته‌ها
+      responses:
+        '200':
+          description: لیست زیردسته‌ها
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                  message:
+                    type: array
+                    items:
+                      type: object
+
+  /category/subcategory/{id}:
+    get:
+      tags:
+        - Category
+      summary: دریافت یک زیردسته
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: اطلاعات زیردسته
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '404':
+          description: زیردسته یافت نشد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags:
+        - Category
+      summary: ویرایش زیردسته (فقط ادمین)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          description: زیردسته ویرایش شد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
